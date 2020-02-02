@@ -34,7 +34,6 @@ tasks.withType(org.jetbrains.kotlin.gradle.tasks.KotlinCompile).all {
 }
 
 dependencies {
-    
     api("org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version")
     api("io.coil-kt:coil:0.9.3")
 }

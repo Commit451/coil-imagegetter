@@ -1,5 +1,5 @@
 # CoilImageGetter
-Loads images for Html rendering using Coil
+Loads images for Html rendering in Android using Coil
 
 [![Build Status](https://travis-ci.org/Commit451/CoilImageGetter.svg?branch=master)](https://travis-ci.org/Commit451/CoilImageGetter)
 [![](https://jitpack.io/v/Commit451/CoilImageGetter.svg)](https://jitpack.io/#Commit451/CoilImageGetter)
@@ -26,9 +26,9 @@ dependencies {
 ## Usage
 When rendering HTML, you will need to provide an `Html.ImageGetter`, which
 ```kotlin
+val imageGetter = CoilImageGetter()
 val html = ...
-val getter = CoilImageGetter(textView)
-val spanned = Html.fromHtml(this, Html.FROM_HTML_MODE_LEGACY, imageGetter, tagHandler)
+val spanned = Html.fromHtml(this, Html.FROM_HTML_MODE_LEGACY, imageGetter)
 textView.text = spanned
 ```
 

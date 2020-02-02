@@ -58,7 +58,7 @@ class MainActivity : AppCompatActivity(), CoroutineScope {
         val document = parser.parse(markdown)
         val html = renderer.render(document)
 
-        val getter = CoilImageGetter(textView)
+        val getter = CoilImageGetter()
 
         return html.formatAsHtml(getter)
     }
