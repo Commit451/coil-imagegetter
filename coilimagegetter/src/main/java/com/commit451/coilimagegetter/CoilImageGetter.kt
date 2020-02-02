@@ -29,43 +29,35 @@ open class CoilImageGetter(
     private val sourceModifier: ((source: String) -> String)? = null
 ) : Html.ImageGetter {
 
-    private var maxWidth: Int = -1
-
     override fun getDrawable(source: String): Drawable {
         val drawablePlaceholder = BitmapDrawablePlaceHolder()
         val finalSource = sourceModifier?.invoke(source) ?: source
 
         imageLoader.load(textView.context, finalSource) {
             target { drawable ->
-                if (maxWidth == -1) {
-                    val horizontalPadding = textView.paddingLeft + textView.paddingRight
-                    maxWidth = textView.measuredWidth - horizontalPadding
-                    if (maxWidth == 0) {
-                        maxWidth = Int.MAX_VALUE
-                    }
-                }
-
-                val aspectRatio: Double = 1.0 * drawable.intrinsicWidth / drawable.intrinsicHeight
-                val width = maxWidth.coerceAtMost(drawable.intrinsicWidth)
-                val height = (width / aspectRatio).toInt()
-
-                drawable.setBounds(0, 0, width, height)
-
-                drawablePlaceholder.drawable = drawable
-                drawablePlaceholder.setBounds(0, 0, width, height)
-
+                drawablePlaceholder.updateDrawable(drawable)
                 textView.text = textView.text // invalidate() doesn't work correctly...
             }
         }
+        // Since this loads async, we return a "blank" drawable, which we update
+        // later
         return drawablePlaceholder
     }
 
     private class BitmapDrawablePlaceHolder : BitmapDrawable() {
 
-        var drawable: Drawable? = null
+        private var drawable: Drawable? = null
 
         override fun draw(canvas: Canvas) {
             drawable?.draw(canvas)
+        }
+
+        fun updateDrawable(drawable: Drawable) {
+            this.drawable = drawable
+            val width = drawable.intrinsicWidth
+            val height = drawable.intrinsicHeight
+            drawable.setBounds(0, 0, width, height)
+            setBounds(0, 0, width, height)
         }
     }
 }
