@@ -1,0 +1,2 @@
+include ':app', ':coilimagegetter'
+rootProject.name='Coil Image Getter Sample'
