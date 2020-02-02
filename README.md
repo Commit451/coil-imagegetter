@@ -1,5 +1,5 @@
 # coil-imagegetter
-Loads images for Html rendering in Android using Coil
+Loads images for Html rendering in Android using [Coil](https://coil-kt.github.io/coil/)
 
 [![Build Status](https://travis-ci.org/Commit451/coil-imagegetter.svg?branch=master)](https://travis-ci.org/Commit451/coil-imagegetter)
 [![](https://jitpack.io/v/Commit451/coil-imagegetter.svg)](https://jitpack.io/#Commit451/coil-imagegetter)
