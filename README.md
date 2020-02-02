@@ -1,8 +1,8 @@
-# CoilImageGetter
+# coil-imagegetter
 Loads images for Html rendering in Android using Coil
 
-[![Build Status](https://travis-ci.org/Commit451/CoilImageGetter.svg?branch=master)](https://travis-ci.org/Commit451/CoilImageGetter)
-[![](https://jitpack.io/v/Commit451/CoilImageGetter.svg)](https://jitpack.io/#Commit451/CoilImageGetter)
+[![Build Status](https://travis-ci.org/Commit451/coil-imagegetter.svg?branch=master)](https://travis-ci.org/Commit451/coil-imagegetter)
+[![](https://jitpack.io/v/Commit451/coil-imagegetter.svg)](https://jitpack.io/#Commit451/coil-imagegetter)
 
 ## Dependency
 Add this in your root `build.gradle` file (**not** your module `build.gradle` file):
