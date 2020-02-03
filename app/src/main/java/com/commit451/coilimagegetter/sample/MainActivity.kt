@@ -34,11 +34,23 @@ class MainActivity : AppCompatActivity(), CoroutineScope {
         setContentView(R.layout.activity_main)
         job = Job()
 
-        launch {
-            val deferred = async(Dispatchers.Default) {
-                loadReadmeToSpanned()
+        val testingAsync = true
+        if (testingAsync) {
+            launch {
+                val deferred = async(Dispatchers.Default) {
+                    loadReadmeAsSpanned()
+                }
+                textView.text = deferred.await()
             }
-            textView.text = deferred.await()
+        } else {
+            launch {
+                val deferred = async(Dispatchers.Default) {
+                    loadReadmeAsHtml()
+                }
+                val html = deferred.await()
+                val getter = CoilImageGetter(textView)
+                textView.text = html.formatAsHtml(getter)
+            }
         }
     }
 
@@ -47,19 +59,20 @@ class MainActivity : AppCompatActivity(), CoroutineScope {
         job.cancel()
     }
 
-    private suspend fun loadReadmeToSpanned(): Spanned {
+    private suspend fun loadReadmeAsHtml(): String {
         val request = Request.Builder()
             .url("https://raw.githubusercontent.com/Jawnnypoo/open-meh/master/README.md")
             .build()
-        // Do call and await() for result from any suspend function
         val result = client.newCall(request).await()
         val markdown = result.body()?.string()
 
         val document = parser.parse(markdown)
-        val html = renderer.render(document)
+        return renderer.render(document)
+    }
 
-        val getter = CoilImageGetter()
-
+    private suspend fun loadReadmeAsSpanned(): Spanned {
+        val html = loadReadmeAsHtml()
+        val getter = CoilImageGetter(textView)
         return html.formatAsHtml(getter)
     }
 

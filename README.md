@@ -24,15 +24,15 @@ dependencies {
 ```
 
 ## Usage
-When rendering HTML, you will need to provide an `Html.ImageGetter`, which
+When rendering HTML, you will need to provide an `Html.ImageGetter`, which you can use `CoilImageGetter` or a subclass in order to load image references:
 ```kotlin
-val imageGetter = CoilImageGetter()
+val imageGetter = CoilImageGetter(textView)
 val html = ...
 val spanned = Html.fromHtml(this, Html.FROM_HTML_MODE_LEGACY, imageGetter)
 textView.text = spanned
 ```
-
-For advanced usage, you can also specify your own `ImageLoader` and source modifier.
+When running the above on the Main thread, you will see the text appear first, then the images. Otherwise, if run on a background thread, the text and images will appear at the same time. You can see this in the sample app.
+For advanced usage, you can also specify your own `ImageLoader` and source modifier. See the class docs for more.
 
 License
 --------
