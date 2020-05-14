@@ -72,7 +72,16 @@ class MainActivity : AppCompatActivity(), CoroutineScope {
 
     private suspend fun loadReadmeAsSpanned(): Spanned {
         val html = loadReadmeAsHtml()
-        val getter = CoilImageGetter(textView)
+        val getter = CoilImageGetter(
+            textView = textView,
+            sourceModifier = { source ->
+                if (source.startsWith("http")) {
+                    source
+                } else {
+                    "https://raw.githubusercontent.com/Jawnnypoo/open-meh/master/$source"
+                }
+            }
+        )
         return html.formatAsHtml(getter)
     }
 

@@ -9,6 +9,7 @@ import android.widget.TextView
 import coil.Coil
 import coil.ImageLoader
 import coil.api.load
+import coil.request.LoadRequest
 
 /**
  * An [Html.ImageGetter] implementation that uses Coil to load images. If you use this getter within
@@ -22,7 +23,7 @@ import coil.api.load
  */
 open class CoilImageGetter(
     private val textView: TextView,
-    private val imageLoader: ImageLoader = Coil.loader(),
+    private val imageLoader: ImageLoader = Coil.imageLoader(textView.context),
     private val sourceModifier: ((source: String) -> String)? = null
 ) : Html.ImageGetter {
 
@@ -31,23 +32,24 @@ open class CoilImageGetter(
 
         return if (isMainThread()) {
             val drawablePlaceholder = DrawablePlaceHolder()
-            imageLoader.load(textView.context, finalSource) {
+            imageLoader.execute(LoadRequest.Builder(textView.context).data(finalSource).apply {
                 target { drawable ->
                     drawablePlaceholder.updateDrawable(drawable)
                     // invalidating the drawable doesn't seem to be enough...
                     textView.text = textView.text
                 }
-            }
+            }.build())
             // Since this loads async, we return a "blank" drawable, which we update
             // later
             return drawablePlaceholder
         } else {
-            val drawable = CoilCompat.getBlocking(imageLoader, finalSource)
+            val drawable = CoilCompat.getBlocking(textView.context, imageLoader, finalSource)
             drawable.setBounds(0, 0, drawable.intrinsicWidth, drawable.intrinsicHeight)
             drawable
         }
     }
 
+    @Suppress("DEPRECATION")
     private class DrawablePlaceHolder : BitmapDrawable() {
 
         private var drawable: Drawable? = null

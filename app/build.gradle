@@ -38,8 +38,8 @@ ext {
 dependencies {
     implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version")
     implementation("androidx.appcompat:appcompat:1.1.0")
-    implementation("androidx.core:core-ktx:1.1.0")
-    implementation("com.atlassian.commonmark:commonmark:0.13.1")
+    implementation("androidx.core:core-ktx:1.2.0")
+    implementation("com.atlassian.commonmark:commonmark:0.14.0")
     implementation("ru.gildor.coroutines:kotlin-coroutines-okhttp:1.0")
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:$coroutinesVersion")
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:$coroutinesVersion")
