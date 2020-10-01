@@ -34,8 +34,8 @@ class MainActivity : AppCompatActivity(), CoroutineScope {
         setContentView(R.layout.activity_main)
         job = Job()
 
-        val testingAsync = true
-        if (testingAsync) {
+        val testingMainThread = false
+        if (testingMainThread) {
             launch {
                 val deferred = async(Dispatchers.Default) {
                     loadReadmeAsSpanned()

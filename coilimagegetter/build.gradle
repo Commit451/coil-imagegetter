@@ -2,11 +2,11 @@ apply plugin: "com.android.library"
 apply plugin: "kotlin-android"
 
 android {
-    compileSdkVersion 29
+    compileSdkVersion 30
     
     defaultConfig {
         minSdkVersion 14
-        targetSdkVersion 29
+        targetSdkVersion 30
         versionCode 1
         versionName "1.0"
 
@@ -35,5 +35,5 @@ tasks.withType(org.jetbrains.kotlin.gradle.tasks.KotlinCompile).all {
 
 dependencies {
     api("org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version")
-    api("io.coil-kt:coil:0.10.1")
+    api("io.coil-kt:coil:1.0.0-rc3")
 }

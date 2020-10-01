@@ -8,8 +8,8 @@ import android.text.Html
 import android.widget.TextView
 import coil.Coil
 import coil.ImageLoader
-import coil.api.load
-import coil.request.LoadRequest
+import coil.executeBlocking
+import coil.request.ImageRequest
 
 /**
  * An [Html.ImageGetter] implementation that uses Coil to load images. If you use this getter within
@@ -32,7 +32,7 @@ open class CoilImageGetter(
 
         return if (isMainThread()) {
             val drawablePlaceholder = DrawablePlaceHolder()
-            imageLoader.execute(LoadRequest.Builder(textView.context).data(finalSource).apply {
+            imageLoader.enqueue(ImageRequest.Builder(textView.context).data(finalSource).apply {
                 target { drawable ->
                     drawablePlaceholder.updateDrawable(drawable)
                     // invalidating the drawable doesn't seem to be enough...
@@ -43,7 +43,8 @@ open class CoilImageGetter(
             // later
             return drawablePlaceholder
         } else {
-            val drawable = CoilCompat.getBlocking(textView.context, imageLoader, finalSource)
+            val request = ImageRequest.Builder(textView.context).data(finalSource).build()
+            val drawable = imageLoader.executeBlocking(request).drawable!!
             drawable.setBounds(0, 0, drawable.intrinsicWidth, drawable.intrinsicHeight)
             drawable
         }
