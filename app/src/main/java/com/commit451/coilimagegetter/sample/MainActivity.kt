@@ -34,23 +34,11 @@ class MainActivity : AppCompatActivity(), CoroutineScope {
         setContentView(R.layout.activity_main)
         job = Job()
 
-        val testingMainThread = false
-        if (testingMainThread) {
-            launch {
-                val deferred = async(Dispatchers.Default) {
-                    loadReadmeAsSpanned()
-                }
-                textView.text = deferred.await()
+        launch {
+            val deferred = async(Dispatchers.Default) {
+                loadReadmeAsSpanned()
             }
-        } else {
-            launch {
-                val deferred = async(Dispatchers.Default) {
-                    loadReadmeAsHtml()
-                }
-                val html = deferred.await()
-                val getter = CoilImageGetter(textView)
-                textView.text = html.formatAsHtml(getter)
-            }
+            textView.text = deferred.await()
         }
     }
 

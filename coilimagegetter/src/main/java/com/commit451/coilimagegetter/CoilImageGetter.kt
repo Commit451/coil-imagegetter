@@ -3,18 +3,14 @@ package com.commit451.coilimagegetter
 import android.graphics.Canvas
 import android.graphics.drawable.BitmapDrawable
 import android.graphics.drawable.Drawable
-import android.os.Looper
 import android.text.Html
 import android.widget.TextView
 import coil.Coil
 import coil.ImageLoader
-import coil.executeBlocking
 import coil.request.ImageRequest
 
 /**
- * An [Html.ImageGetter] implementation that uses Coil to load images. If you use this getter within
- * a background thread, Images will load before any text is shown within the text view. If you use
- * this getter within the main thread, text will show first, then images will "pop in".
+ * An [Html.ImageGetter] implementation that uses Coil to load images.
  * @param textView the [TextView] which will receive the formatted HTML
  * @param imageLoader Allows you to specify your own imageLoader
  * @param sourceModifier Allows you to modify the source (typically a URL) of the image before it
@@ -30,24 +26,17 @@ open class CoilImageGetter(
     override fun getDrawable(source: String): Drawable {
         val finalSource = sourceModifier?.invoke(source) ?: source
 
-        return if (isMainThread()) {
-            val drawablePlaceholder = DrawablePlaceHolder()
-            imageLoader.enqueue(ImageRequest.Builder(textView.context).data(finalSource).apply {
-                target { drawable ->
-                    drawablePlaceholder.updateDrawable(drawable)
-                    // invalidating the drawable doesn't seem to be enough...
-                    textView.text = textView.text
-                }
-            }.build())
-            // Since this loads async, we return a "blank" drawable, which we update
-            // later
-            return drawablePlaceholder
-        } else {
-            val request = ImageRequest.Builder(textView.context).data(finalSource).build()
-            val drawable = imageLoader.executeBlocking(request).drawable!!
-            drawable.setBounds(0, 0, drawable.intrinsicWidth, drawable.intrinsicHeight)
-            drawable
-        }
+        val drawablePlaceholder = DrawablePlaceHolder()
+        imageLoader.enqueue(ImageRequest.Builder(textView.context).data(finalSource).apply {
+            target { drawable ->
+                drawablePlaceholder.updateDrawable(drawable)
+                // invalidating the drawable doesn't seem to be enough...
+                textView.text = textView.text
+            }
+        }.build())
+        // Since this loads async, we return a "blank" drawable, which we update
+        // later
+        return drawablePlaceholder
     }
 
     @Suppress("DEPRECATION")
@@ -66,9 +55,5 @@ open class CoilImageGetter(
             drawable.setBounds(0, 0, width, height)
             setBounds(0, 0, width, height)
         }
-    }
-
-    private fun isMainThread(): Boolean {
-        return Looper.myLooper() == Looper.getMainLooper()
     }
 }
