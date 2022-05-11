@@ -6,7 +6,7 @@ import android.text.Html
 import android.text.Spanned
 import androidx.appcompat.app.AppCompatActivity
 import com.commit451.coilimagegetter.CoilImageGetter
-import kotlinx.android.synthetic.main.activity_main.*
+import com.commit451.coilimagegetter.sample.databinding.ActivityMainBinding
 import kotlinx.coroutines.*
 import okhttp3.OkHttpClient
 import okhttp3.Request
@@ -16,6 +16,8 @@ import ru.gildor.coroutines.okhttp.await
 import kotlin.coroutines.CoroutineContext
 
 class MainActivity : AppCompatActivity(), CoroutineScope {
+
+    private lateinit var binding: ActivityMainBinding
 
     private lateinit var job: Job
 
@@ -31,14 +33,15 @@ class MainActivity : AppCompatActivity(), CoroutineScope {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_main)
+        binding = ActivityMainBinding.inflate(layoutInflater)
+        setContentView(binding.root)
         job = Job()
 
         launch {
             val deferred = async(Dispatchers.Default) {
                 loadReadmeAsSpanned()
             }
-            textView.text = deferred.await()
+            binding.textView.text = deferred.await()
         }
     }
 
@@ -52,7 +55,7 @@ class MainActivity : AppCompatActivity(), CoroutineScope {
             .url("https://raw.githubusercontent.com/Jawnnypoo/open-meh/master/README.md")
             .build()
         val result = client.newCall(request).await()
-        val markdown = result.body()?.string()
+        val markdown = result.body?.string()
 
         val document = parser.parse(markdown)
         return renderer.render(document)
@@ -61,7 +64,7 @@ class MainActivity : AppCompatActivity(), CoroutineScope {
     private suspend fun loadReadmeAsSpanned(): Spanned {
         val html = loadReadmeAsHtml()
         val getter = CoilImageGetter(
-            textView = textView,
+            textView = binding.textView,
             sourceModifier = { source ->
                 if (source.startsWith("http")) {
                     source
